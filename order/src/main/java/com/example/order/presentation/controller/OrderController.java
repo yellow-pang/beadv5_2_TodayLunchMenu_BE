@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -72,14 +69,10 @@ public class OrderController {
             @CurrentMember AuthenticatedMember authenticatedMember,
             @RequestParam(required = false) OrderType orderType,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @ParameterObject Pageable pageable
     ) {
         UUID memberId = authenticatedMember.memberId();
-        LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
-        LocalDateTime endDateTime = endDate != null ? endDate.atTime(23, 59, 59) : null;
-        return ResponseEntity.ok(ApiResponse.success(orderSearchUseCase.findByMemberId(memberId, orderType, keyword, startDateTime, endDateTime, pageable)));
+        return ResponseEntity.ok(ApiResponse.success(orderSearchUseCase.findByMemberId(memberId, orderType, keyword, pageable)));
     }
 
     @GetMapping("{orderId}")

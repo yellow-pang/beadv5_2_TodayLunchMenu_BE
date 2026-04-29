@@ -6,7 +6,6 @@ import com.example.order.common.exception.ErrorCode;
 import com.example.order.domain.entity.Delivery;
 import com.example.order.domain.entity.Order;
 import com.example.order.domain.enumtype.OrderType;
-import java.time.LocalDateTime;
 import com.example.order.domain.repository.DeliveryRepository;
 import com.example.order.domain.repository.OrderRepository;
 import com.example.order.presentation.dto.request.PaymentValidationRequest;
@@ -37,8 +36,8 @@ public class OrderSearchService implements OrderSearchUseCase {
     private String s3BaseUrl;
 
     @Override
-    public Page<OrderSummaryResponse> findByMemberId(UUID memberId, OrderType orderType, String keyword, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
-        Page<Order> orders = orderRepository.findByBuyerIdAndOrderType(memberId, orderType, keyword, startDate, endDate, pageable);
+    public Page<OrderSummaryResponse> findByMemberId(UUID memberId, OrderType orderType, String keyword, Pageable pageable) {
+        Page<Order> orders = orderRepository.findByBuyerIdAndOrderType(memberId, orderType, keyword, pageable);
         return orders.map(order -> OrderSummaryResponse.from(order, s3BaseUrl));
     }
 
